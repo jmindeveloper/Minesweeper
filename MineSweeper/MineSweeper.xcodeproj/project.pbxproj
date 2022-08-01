@@ -12,6 +12,8 @@
 		0EE38D362897D6550018DC53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EE38D352897D6550018DC53 /* Assets.xcassets */; };
 		0EE38D392897D6550018DC53 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EE38D372897D6550018DC53 /* LaunchScreen.storyboard */; };
 		0EE38D432897D71C0018DC53 /* MineSweeperViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D422897D71C0018DC53 /* MineSweeperViewController.swift */; };
+		0EE38D462897D8CC0018DC53 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0EE38D452897D8CC0018DC53 /* SnapKit */; };
+		0EE38D4B2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D4A2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,7 @@
 		0EE38D382897D6550018DC53 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EE38D3A2897D6550018DC53 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0EE38D422897D71C0018DC53 /* MineSweeperViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineSweeperViewController.swift; sourceTree = "<group>"; };
+		0EE38D4A2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineSweeperMapCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EE38D462897D8CC0018DC53 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,11 +67,11 @@
 		0EE38D402897D6E80018DC53 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				0EE38D3A2897D6550018DC53 /* Info.plist */,
 				0EE38D2C2897D6540018DC53 /* AppDelegate.swift */,
 				0EE38D2E2897D6540018DC53 /* SceneDelegate.swift */,
 				0EE38D352897D6550018DC53 /* Assets.xcassets */,
 				0EE38D372897D6550018DC53 /* LaunchScreen.storyboard */,
-				0EE38D3A2897D6550018DC53 /* Info.plist */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -75,9 +79,18 @@
 		0EE38D412897D70C0018DC53 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
-				0EE38D422897D71C0018DC53 /* MineSweeperViewController.swift */,
+				0EE38D492897DA770018DC53 /* MineSweeperViewController */,
 			);
 			path = Scene;
+			sourceTree = "<group>";
+		};
+		0EE38D492897DA770018DC53 /* MineSweeperViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0EE38D422897D71C0018DC53 /* MineSweeperViewController.swift */,
+				0EE38D4A2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift */,
+			);
+			path = MineSweeperViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -96,6 +109,9 @@
 			dependencies = (
 			);
 			name = MineSweeper;
+			packageProductDependencies = (
+				0EE38D452897D8CC0018DC53 /* SnapKit */,
+			);
 			productName = MineSweeper;
 			productReference = 0EE38D292897D6540018DC53 /* MineSweeper.app */;
 			productType = "com.apple.product-type.application";
@@ -124,6 +140,9 @@
 				Base,
 			);
 			mainGroup = 0EE38D202897D6540018DC53;
+			packageReferences = (
+				0EE38D442897D8CC0018DC53 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 0EE38D2A2897D6540018DC53 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -152,6 +171,7 @@
 			files = (
 				0EE38D432897D71C0018DC53 /* MineSweeperViewController.swift in Sources */,
 				0EE38D2D2897D6540018DC53 /* AppDelegate.swift in Sources */,
+				0EE38D4B2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift in Sources */,
 				0EE38D2F2897D6540018DC53 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -362,6 +382,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0EE38D442897D8CC0018DC53 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				branch = develop;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0EE38D452897D8CC0018DC53 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EE38D442897D8CC0018DC53 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0EE38D212897D6540018DC53 /* Project object */;
 }
