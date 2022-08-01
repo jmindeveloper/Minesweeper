@@ -20,6 +20,7 @@ final class MineSweeperViewController: UIViewController {
             MineSweeperMapCollectionViewCell.self,
             forCellWithReuseIdentifier: MineSweeperMapCollectionViewCell.identifier
         )
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         
         return collectionView
     }()
@@ -65,6 +66,25 @@ extension MineSweeperViewController: UICollectionViewDataSource {
         }
         
         return cell
+    }
+}
+
+extension MineSweeperViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let frame = collectionView.frame
+        let inset = collectionView.contentInset
+        
+        let width = (frame.width - (inset.left + inset.right)) / 8 - 1.2
+        
+        return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        1.2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        1.2
     }
 }
 
