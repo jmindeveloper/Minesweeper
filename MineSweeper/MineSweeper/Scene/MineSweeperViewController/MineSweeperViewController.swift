@@ -38,9 +38,6 @@ final class MineSweeperViewController: UIViewController {
         configureSubViews()
         setConstraintsOfMineSweeperMapCollectionView()
         bindingViewModel()
-//        manager.createRandomMine(count: 10)
-//        manager.randomMinesApplyToMap()
-////        manager.nearMinesApplyToMap(mine: Location(row: 3, column: 3))
     }
 }
 
@@ -68,6 +65,18 @@ extension MineSweeperViewController {
         viewModel.updateMap
             .sink { [weak self] in
                 self?.mineSweeperMapCollectionView.reloadData()
+            }.store(in: &subscriptions)
+        
+        viewModel.gameFinish
+            .sink { [weak self] finishState in
+                switch finishState {
+                case .clear:
+                    break
+                case .over:
+                    let alert = AlertManager(message: "지뢰가 터졌습니다!!\n님 뒤짐ㅋ")
+                        .showAlert()
+                    self?.present(alert, animated: true)
+                }
             }.store(in: &subscriptions)
     }
 }

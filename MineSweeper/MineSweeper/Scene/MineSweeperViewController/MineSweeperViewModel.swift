@@ -10,8 +10,13 @@ import Combine
 
 final class MineSweeperViewModel {
     
+    enum GameFinishState {
+        case clear, over
+    }
+    
     // MARK: - Properties
     let updateMap = PassthroughSubject<Void, Never>()
+    let gameFinish = PassthroughSubject<GameFinishState, Never>()
     private let gameManager = MineSweeperGameManager()
     lazy var map = Array(repeating: Array(repeating: MapState.nonTapped, count: gameManager.column), count: gameManager.row)
     
@@ -27,9 +32,13 @@ final class MineSweeperViewModel {
             gameManager.emptyLocations.forEach {
                 self.map[$0.row][$0.column] = gameManager.map[$0.row][$0.column]
             }
+            updateMap.send()
+        } else if gameManager.map[location.row][location.column] == .mine {
+            gameFinish.send(.over)
         } else {
             self.map[location.row][location.column] = gameManager.map[location.row][location.column]
+            updateMap.send()
         }
-        updateMap.send()
+        
     }
 }
