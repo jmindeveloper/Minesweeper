@@ -30,6 +30,10 @@ final class MineSweeperMapCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        contentView.backgroundColor = .gray
+    }
+    
     private func configureSubViews() {
         [mineImageView].forEach {
             contentView.addSubview($0)
@@ -45,6 +49,10 @@ final class MineSweeperMapCollectionViewCell: UICollectionViewCell {
     func configureCell(with mapState: MapState) {
         mineImageView.image = mapState.image
         mineImageView.tintColor = mapState.imageColor
+        
+        if mapState == .empty {
+            contentView.backgroundColor = .lightGray
+        }
     }
     
 }

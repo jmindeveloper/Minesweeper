@@ -18,7 +18,6 @@ final class MineSweeperViewModel {
     // MARK: - LifeCycle
     init() {
         gameManager.newGame()
-        print(gameManager.map)
     }
     
     // MARK: - Method
