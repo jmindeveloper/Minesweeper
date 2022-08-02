@@ -7,12 +7,21 @@
 
 import UIKit
 
-enum MapState {
+enum MapState: Equatable {
     case mine
     case empty
     case nearMine(count: Int)
     case flag
     case nonTapped
+    
+    var nearMineCount: Int {
+        switch self {
+        case .nearMine(let count):
+            return count + 1
+        default: break
+        }
+        return 1
+    }
     
     var image: UIImage? {
         switch self {

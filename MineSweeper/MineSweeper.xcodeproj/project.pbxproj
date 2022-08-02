@@ -16,7 +16,7 @@
 		0EE38D4B2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D4A2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift */; };
 		0EE38D4E2897F2FF0018DC53 /* MineSweeperGameManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D4D2897F2FF0018DC53 /* MineSweeperGameManager.swift */; };
 		0EE38D502897F5520018DC53 /* MapState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D4F2897F5520018DC53 /* MapState.swift */; };
-		0EE38D532898BEDB0018DC53 /* Mine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D522898BEDB0018DC53 /* Mine.swift */; };
+		0EE38D552898C7A00018DC53 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE38D542898C7A00018DC53 /* Location.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,7 +30,7 @@
 		0EE38D4A2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineSweeperMapCollectionViewCell.swift; sourceTree = "<group>"; };
 		0EE38D4D2897F2FF0018DC53 /* MineSweeperGameManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MineSweeperGameManager.swift; sourceTree = "<group>"; };
 		0EE38D4F2897F5520018DC53 /* MapState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapState.swift; sourceTree = "<group>"; };
-		0EE38D522898BEDB0018DC53 /* Mine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mine.swift; sourceTree = "<group>"; };
+		0EE38D542898C7A00018DC53 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +113,7 @@
 		0EE38D512898BED50018DC53 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				0EE38D522898BEDB0018DC53 /* Mine.swift */,
+				0EE38D542898C7A00018DC53 /* Location.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -197,10 +197,10 @@
 				0EE38D502897F5520018DC53 /* MapState.swift in Sources */,
 				0EE38D432897D71C0018DC53 /* MineSweeperViewController.swift in Sources */,
 				0EE38D2D2897D6540018DC53 /* AppDelegate.swift in Sources */,
-				0EE38D532898BEDB0018DC53 /* Mine.swift in Sources */,
 				0EE38D4B2897DA8B0018DC53 /* MineSweeperMapCollectionViewCell.swift in Sources */,
 				0EE38D4E2897F2FF0018DC53 /* MineSweeperGameManager.swift in Sources */,
 				0EE38D2F2897D6540018DC53 /* SceneDelegate.swift in Sources */,
+				0EE38D552898C7A00018DC53 /* Location.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

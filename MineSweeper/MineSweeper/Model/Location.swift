@@ -1,5 +1,5 @@
 //
-//  Mine.swift
+//  Location.swift
 //  MineSweeper
 //
 //  Created by J_Min on 2022/08/02.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Mine: Hashable {
+struct Location: Hashable {
     let row: Int
     let column: Int
     

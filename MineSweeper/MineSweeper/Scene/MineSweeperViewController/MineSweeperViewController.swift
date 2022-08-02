@@ -35,6 +35,7 @@ final class MineSweeperViewController: UIViewController {
         setConstraintsOfMineSweeperMapCollectionView()
         manager.createRandomMine(count: 10)
         manager.randomMinesApplyToMap()
+//        manager.nearMinesApplyToMap(mine: Location(row: 3, column: 3))
     }
 }
 
