@@ -22,7 +22,7 @@ final class MineSweeperViewModel {
     
     // MARK: - LifeCycle
     init() {
-        gameManager.newGame()
+//        gameManager.newGame()
     }
     
     // MARK: - Method
@@ -39,5 +39,10 @@ final class MineSweeperViewModel {
             self.map[location.row][location.column] = gameManager.map[location.row][location.column]
             updateMap.send()
         }
+    }
+    
+    func mapFirstTapped(location: Location) {
+        gameManager.newGame(location)
+        mapTapped(location: location)
     }
 }

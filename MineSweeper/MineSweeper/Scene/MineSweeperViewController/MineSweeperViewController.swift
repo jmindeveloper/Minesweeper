@@ -11,7 +11,9 @@ import Combine
 
 final class MineSweeperViewController: UIViewController {
     
-    let viewModel = MineSweeperViewModel()
+    enum GameState {
+        case start, ing, finish
+    }
     
     // MARK: - ViewProperties
     private lazy var mineSweeperMapCollectionView: UICollectionView = {
@@ -30,6 +32,8 @@ final class MineSweeperViewController: UIViewController {
     
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>()
+    private var gameState = GameState.start
+    let viewModel = MineSweeperViewModel()
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -127,7 +131,13 @@ extension MineSweeperViewController: UICollectionViewDelegateFlowLayout {
 extension MineSweeperViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let tapLocation = Location(row: indexPath.section, column: indexPath.item)
-        
-        viewModel.mapTapped(location: tapLocation)
+        switch gameState {
+        case .start:
+            viewModel.mapFirstTapped(location: tapLocation)
+            gameState = .ing
+        case .ing:
+            viewModel.mapTapped(location: tapLocation)
+        case .finish: break
+        }
     }
 }
