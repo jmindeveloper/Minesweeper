@@ -17,11 +17,13 @@ final class MineSweeperGameManager {
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
     private lazy var visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
     
+    /// 새로운 게임
     func newGame() {
         createRandomMine()
         randomMinesApplyToMap()
     }
     
+    /// 랜덤지뢰위치 생성
     func createRandomMine(count: Int = 10) {
         while mines.count < count {
             guard let locationRow = (0..<row).randomElement(),
@@ -31,6 +33,7 @@ final class MineSweeperGameManager {
         }
     }
     
+    /// 랜덤지뢰위치 map에 적용
     func randomMinesApplyToMap() {
         mines.forEach {
             map[$0.row][$0.column] = .mine
@@ -38,6 +41,7 @@ final class MineSweeperGameManager {
         }
     }
     
+    /// 근처지뢰개수 계산
     private func nearMinesApplyToMap(mine: Location) {
         let d = [0, 1, -1]
         
@@ -60,6 +64,7 @@ final class MineSweeperGameManager {
         }
     }
     
+    /// 빈맵 주위에 빈맵 검색
     func findEmptyMap(location: Location) {
         let d = [0, 1, -1]
         
@@ -86,7 +91,6 @@ final class MineSweeperGameManager {
                 let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
                 visitedMap[location.row][location.column] = true
                 findEmptyMap(location: newLocation)
-                visitedMap[location.row][location.column] = false
             }
         }
     }
