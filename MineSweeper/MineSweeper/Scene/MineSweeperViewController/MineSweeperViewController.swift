@@ -71,10 +71,12 @@ extension MineSweeperViewController {
             .sink { [weak self] finishState in
                 switch finishState {
                 case .clear:
-                    break
+                    let alert = AlertManager(message: "모든 지뢰를 다 찾았습니다!!\n운좋네ㅋ")
+                        .createAlert()
+                    self?.present(alert, animated: true)
                 case .over:
                     let alert = AlertManager(message: "지뢰가 터졌습니다!!\n님 뒤짐ㅋ")
-                        .showAlert()
+                        .createAlert()
                     self?.present(alert, animated: true)
                 }
             }.store(in: &subscriptions)

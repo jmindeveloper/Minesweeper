@@ -20,7 +20,7 @@ final class AlertManager {
         self.message = message
     }
     
-    func showAlert(okAction: (() -> Void)? = nil) -> UIAlertController {
+    func createAlert(okAction: (() -> Void)? = nil) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .default) { _ in
             okAction?()
