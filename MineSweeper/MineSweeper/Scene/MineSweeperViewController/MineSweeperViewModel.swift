@@ -22,8 +22,14 @@ final class MineSweeperViewModel {
     
     // MARK: - Method
     func mapTapped(location: Location) {
-        print(location)
-        self.map[location.row][location.column] = gameManager.map[location.row][location.column]
+        if gameManager.map[location.row][location.column] == .empty {
+            gameManager.findEmptyMap(location: location)
+            gameManager.emptyLocations.forEach {
+                self.map[$0.row][$0.column] = gameManager.map[$0.row][$0.column]
+            }
+        } else {
+            self.map[location.row][location.column] = gameManager.map[location.row][location.column]
+        }
         updateMap.send()
     }
 }

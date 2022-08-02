@@ -12,8 +12,10 @@ final class MineSweeperGameManager {
     let row = 10
     let column = 8
     private var mines = Set<Location>()
+    var emptyLocations = [Location]()
     
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
+    private lazy var visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
     
     func newGame() {
         createRandomMine()
@@ -42,20 +44,49 @@ final class MineSweeperGameManager {
         for i in 0..<3 {
             for j in 0..<3 {
                 let dxy = (d[i], d[j])
-                if dxy == (0, 0) { continue }
                 
-                if mine.row + dxy.0 < 0 ||
+                if dxy == (0, 0) ||
+                    mine.row + dxy.0 < 0 ||
                     mine.row + dxy.0 >= row ||
                     mine.column + dxy.1 >= column ||
                     mine.column + dxy.1 < 0 { continue }
                 let nearMine = Location(row: mine.row + dxy.0, column: mine.column + dxy.1)
                 if map[nearMine.row][nearMine.column] != .mine {
-                    map[nearMine.row][nearMine.column] =
-                        .nearMine(
-                            count: map[nearMine.row][nearMine.column]
-                                .nearMineCount
+                    map[nearMine.row][nearMine.column] = .nearMine(
+                            count: map[nearMine.row][nearMine.column].nearMineCount
                         )
                 }
+            }
+        }
+    }
+    
+    func findEmptyMap(location: Location) {
+        let d = [0, 1, -1]
+        
+        if map[location.row][location.column] != .empty ||
+            visitedMap[location.row][location.column] {
+            if case MapState.nearMine(count: _) = map[location.row][location.column] {
+                emptyLocations.append(location)
+            }
+            return
+        }
+        
+        emptyLocations.append(location)
+        
+        for i in 0..<3 {
+            for j in 0..<3 {
+                
+                let dxy = (d[i], d[j])
+                
+                if location.row + dxy.0 < 0 ||
+                    location.row + dxy.0 >= row ||
+                    location.column + dxy.1 >= column ||
+                    location.column + dxy.1 < 0 { continue }
+                print(location)
+                let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
+                visitedMap[location.row][location.column] = true
+                findEmptyMap(location: newLocation)
+                visitedMap[location.row][location.column] = false
             }
         }
     }
