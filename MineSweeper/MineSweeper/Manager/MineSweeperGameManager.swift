@@ -17,21 +17,25 @@ final class MineSweeperGameManager {
     private lazy var visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
     
     /// 새로운 게임
-    func newGame() {
-        let mines = createRandomMine()
+    func newGame(_ firstLocation: Location) {
+        let mines = createRandomMine(location: firstLocation)
         randomMinesApplyToMap(mines: mines)
     }
     
     /// 랜덤지뢰위치 생성
-    func createRandomMine(count: Int = 10) -> Set<Location> {
+    func createRandomMine(count: Int = 10, location: Location) -> Set<Location> {
         var mines = Set<Location>()
         while mines.count < count {
             guard let locationRow = (0..<row).randomElement(),
                   let locationColumn = (0..<column).randomElement() else { continue }
             
+            if locationRow == location.row, locationColumn == locationColumn {
+                continue
+            }
+            
             mines.insert(Location(row: locationRow, column: locationColumn))
         }
-        
+        print(mines)
         return mines
     }
     
