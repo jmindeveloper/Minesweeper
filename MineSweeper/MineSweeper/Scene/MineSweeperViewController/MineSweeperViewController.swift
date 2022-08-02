@@ -33,6 +33,9 @@ final class MineSweeperViewController: UIViewController {
         view.backgroundColor = .systemBackground
         configureSubViews()
         setConstraintsOfMineSweeperMapCollectionView()
+        manager.createRandomMine(count: 10)
+        manager.randomMinesApplyToMap()
+//        manager.nearMinesApplyToMap(mine: Location(row: 3, column: 3))
     }
 }
 
@@ -70,7 +73,7 @@ extension MineSweeperViewController: UICollectionViewDataSource {
             for: indexPath) as? MineSweeperMapCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configureCell(with: mockupMap[indexPath.section][indexPath.item])
+        cell.configureCell(with: manager.map[indexPath.section][indexPath.item])
         return cell
     }
 }
