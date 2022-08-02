@@ -39,6 +39,5 @@ final class MineSweeperViewModel {
             self.map[location.row][location.column] = gameManager.map[location.row][location.column]
             updateMap.send()
         }
-        
     }
 }

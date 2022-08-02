@@ -19,6 +19,7 @@ final class MineSweeperMapCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
+    // MARK: - LifeCycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .gray
@@ -30,6 +31,7 @@ final class MineSweeperMapCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Method
     override func prepareForReuse() {
         contentView.backgroundColor = .gray
     }
@@ -54,5 +56,4 @@ final class MineSweeperMapCollectionViewCell: UICollectionViewCell {
             contentView.backgroundColor = .lightGray
         }
     }
-    
 }

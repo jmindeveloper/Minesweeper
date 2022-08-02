@@ -11,7 +11,6 @@ final class MineSweeperGameManager {
     
     let row = 10
     let column = 8
-    private var mines = Set<Location>()
     var emptyLocations = [Location]()
     
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
@@ -19,22 +18,25 @@ final class MineSweeperGameManager {
     
     /// 새로운 게임
     func newGame() {
-        createRandomMine()
-        randomMinesApplyToMap()
+        let mines = createRandomMine()
+        randomMinesApplyToMap(mines: mines)
     }
     
     /// 랜덤지뢰위치 생성
-    func createRandomMine(count: Int = 10) {
+    func createRandomMine(count: Int = 10) -> Set<Location> {
+        var mines = Set<Location>()
         while mines.count < count {
             guard let locationRow = (0..<row).randomElement(),
-                  let locationColumn = (0..<column).randomElement() else { return }
+                  let locationColumn = (0..<column).randomElement() else { continue }
             
             mines.insert(Location(row: locationRow, column: locationColumn))
         }
+        
+        return mines
     }
     
     /// 랜덤지뢰위치 map에 적용
-    func randomMinesApplyToMap() {
+    func randomMinesApplyToMap(mines: Set<Location>) {
         mines.forEach {
             map[$0.row][$0.column] = .mine
             nearMinesApplyToMap(mine: $0)
