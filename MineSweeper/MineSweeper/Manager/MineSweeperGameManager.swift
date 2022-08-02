@@ -9,11 +9,16 @@ import Foundation
 
 final class MineSweeperGameManager {
     
-    private let row = 10
-    private let column = 8
+    let row = 10
+    let column = 8
     private var mines = Set<Location>()
     
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
+    
+    func newGame() {
+        createRandomMine()
+        randomMinesApplyToMap()
+    }
     
     func createRandomMine(count: Int = 10) {
         while mines.count < count {
@@ -31,7 +36,7 @@ final class MineSweeperGameManager {
         }
     }
     
-    func nearMinesApplyToMap(mine: Location) {
+    private func nearMinesApplyToMap(mine: Location) {
         let d = [0, 1, -1]
         
         for i in 0..<3 {

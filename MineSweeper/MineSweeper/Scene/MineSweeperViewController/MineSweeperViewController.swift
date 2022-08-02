@@ -7,10 +7,11 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 final class MineSweeperViewController: UIViewController {
     
-    let manager = MineSweeperGameManager()
+    let viewModel = MineSweeperViewModel()
     
     // MARK: - ViewProperties
     private lazy var mineSweeperMapCollectionView: UICollectionView = {
@@ -27,15 +28,19 @@ final class MineSweeperViewController: UIViewController {
         return collectionView
     }()
     
+    // MARK: - Properties
+    private var subscriptions = Set<AnyCancellable>()
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         configureSubViews()
         setConstraintsOfMineSweeperMapCollectionView()
-        manager.createRandomMine(count: 10)
-        manager.randomMinesApplyToMap()
-//        manager.nearMinesApplyToMap(mine: Location(row: 3, column: 3))
+        bindingViewModel()
+//        manager.createRandomMine(count: 10)
+//        manager.randomMinesApplyToMap()
+////        manager.nearMinesApplyToMap(mine: Location(row: 3, column: 3))
     }
 }
 
@@ -57,14 +62,24 @@ extension MineSweeperViewController {
     }
 }
 
+// MARK: - Binding
+extension MineSweeperViewController {
+    private func bindingViewModel() {
+        viewModel.updateMap
+            .sink { [weak self] in
+                self?.mineSweeperMapCollectionView.reloadData()
+            }.store(in: &subscriptions)
+    }
+}
+
 // MARK: - UICollectionViewDataSource
 extension MineSweeperViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return manager.map.count
+        return viewModel.map.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return manager.map.first?.count ?? 0
+        return viewModel.map.first?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -73,7 +88,7 @@ extension MineSweeperViewController: UICollectionViewDataSource {
             for: indexPath) as? MineSweeperMapCollectionViewCell else {
             return UICollectionViewCell()
         }
-        cell.configureCell(with: manager.map[indexPath.section][indexPath.item])
+        cell.configureCell(with: viewModel.map[indexPath.section][indexPath.item])
         return cell
     }
 }
@@ -100,6 +115,8 @@ extension MineSweeperViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate
 extension MineSweeperViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath)
+        let tapLocation = Location(row: indexPath.section, column: indexPath.item)
+        
+        viewModel.mapTapped(location: tapLocation)
     }
 }
