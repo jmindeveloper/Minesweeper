@@ -6,18 +6,45 @@
 //
 
 import UIKit
+import SnapKit
 
 final class MineSweeperMapCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "MineSweeperMapCollectionViewCell"
     
+    // MARK: - ViewProperties
+    let mineImageView: UIImageView = {
+        let imageView = UIImageView()
+        
+        return imageView
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .yellow
+        contentView.backgroundColor = .gray
+        configureSubViews()
+        setConstraintsOfMineImageView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configureSubViews() {
+        [mineImageView].forEach {
+            contentView.addSubview($0)
+        }
+    }
+    
+    private func setConstraintsOfMineImageView() {
+        mineImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(4)
+        }
+    }
+    
+    func configureCell(with mapState: MapState) {
+        mineImageView.image = mapState.image
+        mineImageView.tintColor = mapState.imageColor
     }
     
 }
