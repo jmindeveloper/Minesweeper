@@ -10,6 +10,8 @@ import SnapKit
 
 final class MineSweeperViewController: UIViewController {
     
+    let manager = MineSweeperGameManager()
+    
     // MARK: - ViewProperties
     private lazy var mineSweeperMapCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -54,8 +56,12 @@ extension MineSweeperViewController {
 
 // MARK: - UICollectionViewDataSource
 extension MineSweeperViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return manager.map.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 80
+        return manager.map.first?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -64,7 +70,7 @@ extension MineSweeperViewController: UICollectionViewDataSource {
             for: indexPath) as? MineSweeperMapCollectionViewCell else {
             return UICollectionViewCell()
         }
-        
+        cell.configureCell(with: mockupMap[indexPath.section][indexPath.item])
         return cell
     }
 }
@@ -79,16 +85,18 @@ extension MineSweeperViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: width)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         1.2
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        1.2
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 1.2, left: 0, bottom: 0, right: 0)
     }
 }
 
 // MARK: - UICollectionViewDelegate
 extension MineSweeperViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(indexPath)
+    }
 }
