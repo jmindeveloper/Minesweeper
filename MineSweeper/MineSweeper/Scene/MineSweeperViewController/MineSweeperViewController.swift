@@ -30,6 +30,17 @@ final class MineSweeperViewController: UIViewController {
         return collectionView
     }()
     
+    private lazy var flagButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "flag"), for: .normal)
+        button.setImage(UIImage(systemName: "flag.fill"), for: .selected)
+        button.setPreferredSymbolConfiguration(.init(pointSize: 40, weight: .regular, scale: .default), forImageIn: .normal)
+        button.tintColor = .red
+        button.addTarget(nil, action: #selector(flagButtonTapped(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>()
     private var gameState = GameState.start
@@ -41,6 +52,7 @@ final class MineSweeperViewController: UIViewController {
         view.backgroundColor = .systemBackground
         configureSubViews()
         setConstraintsOfMineSweeperMapCollectionView()
+        setConstraintsOfFlagButton()
         bindingViewModel()
     }
 }
@@ -48,7 +60,7 @@ final class MineSweeperViewController: UIViewController {
 // MARK: - UI
 extension MineSweeperViewController {
     private func configureSubViews() {
-        [mineSweeperMapCollectionView].forEach {
+        [mineSweeperMapCollectionView, flagButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -60,6 +72,21 @@ extension MineSweeperViewController {
             $0.width.equalToSuperview()
             $0.height.equalToSuperview().multipliedBy(0.7)
         }
+    }
+    
+    private func setConstraintsOfFlagButton() {
+        flagButton.snp.makeConstraints {
+            $0.bottom.equalTo(mineSweeperMapCollectionView.snp.top).offset(-10)
+            $0.leading.equalToSuperview().offset(30)
+            $0.size.equalTo(40)
+        }
+    }
+}
+
+// MARK: - TargetMethod
+extension MineSweeperViewController {
+    @objc private func flagButtonTapped(_ sender: UIButton) {
+        sender.isSelected.toggle()
     }
 }
 
@@ -131,6 +158,11 @@ extension MineSweeperViewController: UICollectionViewDelegateFlowLayout {
 extension MineSweeperViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let tapLocation = Location(row: indexPath.section, column: indexPath.item)
+        if flagButton.isSelected {
+            viewModel.flagModeTapped(location: tapLocation)
+            return
+        }
+        
         switch gameState {
         case .start:
             viewModel.mapFirstTapped(location: tapLocation)

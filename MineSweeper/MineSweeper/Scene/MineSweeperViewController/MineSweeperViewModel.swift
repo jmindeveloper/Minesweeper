@@ -45,4 +45,15 @@ final class MineSweeperViewModel {
         gameManager.newGame(location)
         mapTapped(location: location)
     }
+    
+    func flagModeTapped(location: Location) {
+        switch map[location.row][location.column] {
+        case .nonTapped:
+            map[location.row][location.column] = .flag
+        case .flag:
+            map[location.row][location.column] = .nonTapped
+        default: break
+        }
+        updateMap.send()
+    }
 }
