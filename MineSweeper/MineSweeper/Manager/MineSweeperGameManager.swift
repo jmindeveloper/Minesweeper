@@ -29,13 +29,21 @@ final class MineSweeperGameManager {
             guard let locationRow = (0..<row).randomElement(),
                   let locationColumn = (0..<column).randomElement() else { continue }
             
-            if locationRow == location.row, locationColumn == locationColumn {
+            if (locationRow == location.row && locationColumn == locationColumn) ||
+                (locationRow == location.row + 1 && locationColumn == locationColumn) ||
+                (locationRow == location.row - 1 && locationColumn == locationColumn) ||
+                (locationRow == location.row + 1 && locationColumn == locationColumn - 1) ||
+                (locationRow == location.row - 1 && locationColumn == locationColumn + 1) ||
+                (locationRow == location.row + 1 && locationColumn == locationColumn + 1) ||
+                (locationRow == location.row - 1 && locationColumn == locationColumn - 1) ||
+                (locationRow == location.row && locationColumn == locationColumn + 1) ||
+                (locationRow == location.row && locationColumn == locationColumn - 1) {
                 continue
             }
             
             mines.insert(Location(row: locationRow, column: locationColumn))
         }
-        print(mines)
+        
         return mines
     }
     
@@ -63,8 +71,8 @@ final class MineSweeperGameManager {
                 let nearMine = Location(row: mine.row + dxy.0, column: mine.column + dxy.1)
                 if map[nearMine.row][nearMine.column] != .mine {
                     map[nearMine.row][nearMine.column] = .nearMine(
-                            count: map[nearMine.row][nearMine.column].nearMineCount
-                        )
+                        count: map[nearMine.row][nearMine.column].nearMineCount
+                    )
                 }
             }
         }
@@ -93,7 +101,6 @@ final class MineSweeperGameManager {
                     location.row + dxy.0 >= row ||
                     location.column + dxy.1 >= column ||
                     location.column + dxy.1 < 0 { continue }
-                print(location)
                 let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
                 visitedMap[location.row][location.column] = true
                 findEmptyMap(location: newLocation)
