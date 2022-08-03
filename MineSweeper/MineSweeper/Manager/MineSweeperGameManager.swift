@@ -6,12 +6,15 @@
 //
 
 import Foundation
+import Combine
 
 final class MineSweeperGameManager {
     
     let row = 10
     let column = 8
     var emptyLocations = [Location]()
+    var flagLocations = [Location]()
+    let gameFinish = PassthroughSubject<GameFinishState, Never>()
     
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
     private lazy var visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
@@ -29,13 +32,21 @@ final class MineSweeperGameManager {
             guard let locationRow = (0..<row).randomElement(),
                   let locationColumn = (0..<column).randomElement() else { continue }
             
-            if locationRow == location.row, locationColumn == locationColumn {
+            if (locationRow == location.row && locationColumn == locationColumn) ||
+                (locationRow == location.row + 1 && locationColumn == locationColumn) ||
+                (locationRow == location.row - 1 && locationColumn == locationColumn) ||
+                (locationRow == location.row + 1 && locationColumn == locationColumn - 1) ||
+                (locationRow == location.row - 1 && locationColumn == locationColumn + 1) ||
+                (locationRow == location.row + 1 && locationColumn == locationColumn + 1) ||
+                (locationRow == location.row - 1 && locationColumn == locationColumn - 1) ||
+                (locationRow == location.row && locationColumn == locationColumn + 1) ||
+                (locationRow == location.row && locationColumn == locationColumn - 1) {
                 continue
             }
             
             mines.insert(Location(row: locationRow, column: locationColumn))
         }
-        print(mines)
+        
         return mines
     }
     
@@ -63,8 +74,8 @@ final class MineSweeperGameManager {
                 let nearMine = Location(row: mine.row + dxy.0, column: mine.column + dxy.1)
                 if map[nearMine.row][nearMine.column] != .mine {
                     map[nearMine.row][nearMine.column] = .nearMine(
-                            count: map[nearMine.row][nearMine.column].nearMineCount
-                        )
+                        count: map[nearMine.row][nearMine.column].nearMineCount + 1
+                    )
                 }
             }
         }
@@ -93,11 +104,61 @@ final class MineSweeperGameManager {
                     location.row + dxy.0 >= row ||
                     location.column + dxy.1 >= column ||
                     location.column + dxy.1 < 0 { continue }
-                print(location)
                 let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
                 visitedMap[location.row][location.column] = true
                 findEmptyMap(location: newLocation)
             }
         }
+    }
+    
+    func findEmptyMapAndValidNearMineMap(location: Location) {
+        if isValidNearMineCount(location: location) {
+            emptyLocations.removeAll()
+            let d = [0, 1, -1]
+            
+            for i in 0..<3 {
+                for j in 0..<3 {
+                    
+                    let dxy = (d[i], d[j])
+                    
+                    if location.row + dxy.0 < 0 ||
+                        location.row + dxy.0 >= row ||
+                        location.column + dxy.1 >= column ||
+                        location.column + dxy.1 < 0 { continue }
+                    let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
+                    
+                    if map[newLocation.row][newLocation.column] == .mine,
+                       !flagLocations.contains(newLocation) {
+                        gameFinish.send(.over)
+                    } else {
+                        if map[newLocation.row][newLocation.column] == .empty {
+                            findEmptyMap(location: newLocation)
+                        } else {
+                            emptyLocations.append(newLocation)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func isValidNearMineCount(location: Location) -> Bool {
+        let nearMineCount = map[location.row][location.column].nearMineCount
+        var count = 0
+        let d = [0, 1, -1]
+        for i in 0..<3 {
+            for j in 0..<3 {
+                let dxy = (d[i], d[j])
+                let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
+                
+                if flagLocations.contains(newLocation) {
+                    count += 1
+                }
+                if count == nearMineCount {
+                    return true
+                }
+            }
+        }
+        return false
     }
 }

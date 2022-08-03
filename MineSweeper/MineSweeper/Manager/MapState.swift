@@ -17,10 +17,10 @@ enum MapState: Equatable {
     var nearMineCount: Int {
         switch self {
         case .nearMine(let count):
-            return count + 1
+            return count
         default: break
         }
-        return 1
+        return 0
     }
     
     var image: UIImage? {
