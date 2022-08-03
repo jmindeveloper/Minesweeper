@@ -32,7 +32,7 @@ enum MapState: Equatable {
         case .nearMine(let count):
             return UIImage(systemName: "\(count).circle")
         case .flag:
-            return UIImage(systemName: "flag")
+            return UIImage(systemName: "flag.fill")
         }
     }
     
