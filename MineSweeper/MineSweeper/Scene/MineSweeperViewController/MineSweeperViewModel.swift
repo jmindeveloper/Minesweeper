@@ -8,21 +8,22 @@
 import Foundation
 import Combine
 
+enum GameFinishState {
+    case clear, over
+}
+
 final class MineSweeperViewModel {
-    
-    enum GameFinishState {
-        case clear, over
-    }
     
     // MARK: - Properties
     let updateMap = PassthroughSubject<Void, Never>()
     let gameFinish = PassthroughSubject<GameFinishState, Never>()
     private let gameManager = MineSweeperGameManager()
     lazy var map = Array(repeating: Array(repeating: MapState.nonTapped, count: gameManager.column), count: gameManager.row)
+    private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - LifeCycle
     init() {
-//        gameManager.newGame()
+        bindingGameManager()
     }
     
     // MARK: - Method
@@ -73,5 +74,12 @@ final class MineSweeperViewModel {
         default: break
         }
         updateMap.send()
+    }
+    
+    func bindingGameManager() {
+        gameManager.gameFinish
+            .sink { [weak self] state in
+                self?.gameFinish.send(state)
+            }.store(in: &subscriptions)
     }
 }

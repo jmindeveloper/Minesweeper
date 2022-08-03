@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class MineSweeperGameManager {
     
@@ -13,6 +14,7 @@ final class MineSweeperGameManager {
     let column = 8
     var emptyLocations = [Location]()
     var flagLocations = [Location]()
+    let gameFinish = PassthroughSubject<GameFinishState, Never>()
     
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
     private lazy var visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
@@ -127,7 +129,7 @@ final class MineSweeperGameManager {
                     
                     if map[newLocation.row][newLocation.column] == .mine,
                        !flagLocations.contains(newLocation) {
-                        print("뒤짐ㅋ")
+                        gameFinish.send(.over)
                     } else {
                         if map[newLocation.row][newLocation.column] == .empty {
                             findEmptyMap(location: newLocation)
