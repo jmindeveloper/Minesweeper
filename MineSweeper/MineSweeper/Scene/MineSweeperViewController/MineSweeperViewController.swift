@@ -127,6 +127,7 @@ extension MineSweeperViewController {
         let alert = AlertManager(message: "게임을 다시시작하겠습니까?", isCancel: true)
             .createAlert { [weak self] in
                 self?.gameState = .start
+                self?.mineCountLabel.text = "0/10"
                 self?.viewModel.resetGame()
             }
         self.present(alert, animated: true)
