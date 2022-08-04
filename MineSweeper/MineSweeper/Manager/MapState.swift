@@ -12,7 +12,7 @@ enum MapState: Equatable {
     case empty
     case nearMine(count: Int)
     case flag
-    case nonTapped
+    case nonOpen
     
     var nearMineCount: Int {
         switch self {
@@ -27,7 +27,7 @@ enum MapState: Equatable {
         switch self {
         case .mine:
             return UIImage(systemName: "circle.hexagongrid")
-        case .empty, .nonTapped:
+        case .empty, .nonOpen:
             return nil
         case .nearMine(let count):
             return UIImage(systemName: "\(count).circle")
@@ -56,7 +56,7 @@ enum MapState: Equatable {
             }
         case .flag:
             return .red
-        case .nonTapped:
+        case .nonOpen:
             return nil
         }
     }

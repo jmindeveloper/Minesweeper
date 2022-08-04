@@ -18,7 +18,7 @@ final class MineSweeperViewModel {
     let updateMap = PassthroughSubject<Void, Never>()
     let gameFinish = PassthroughSubject<GameFinishState, Never>()
     private let gameManager = MineSweeperGameManager()
-    lazy var map = Array(repeating: Array(repeating: MapState.nonTapped, count: gameManager.column), count: gameManager.row)
+    lazy var map = Array(repeating: Array(repeating: MapState.nonOpen, count: gameManager.column), count: gameManager.row)
     private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - LifeCycle
@@ -40,7 +40,7 @@ final class MineSweeperViewModel {
                 gameFinish.send(.over)
             } else {
                 if case MapState.nearMine(count: _) = gameManager.map[location.row][location.column],
-                   map[location.row][location.column] != .nonTapped {
+                   map[location.row][location.column] != .nonOpen {
                     gameManager.findEmptyMapAndValidNearMineMap(location: location)
                     
                     gameManager.emptyLocations.forEach {
@@ -53,6 +53,20 @@ final class MineSweeperViewModel {
                 updateMap.send()
             }
         }
+        gameManager.checkClearCondition(nonOpenMaps: getNonOpenMapLocation())
+    }
+    
+    private func getNonOpenMapLocation() -> [Location] {
+        var locations = [Location]()
+        for i in 0..<map.count {
+            for j in 0..<(map.first?.count ?? 0) {
+                if map[i][j] == .nonOpen {
+                    let location = Location(row: i, column: j)
+                    locations.append(location)
+                }
+            }
+        }
+        return locations
     }
     
     func mapFirstTapped(location: Location) {
@@ -62,11 +76,11 @@ final class MineSweeperViewModel {
     
     func flagModeTapped(location: Location) {
         switch map[location.row][location.column] {
-        case .nonTapped:
+        case .nonOpen:
             map[location.row][location.column] = .flag
             gameManager.flagLocations.append(location)
         case .flag:
-            map[location.row][location.column] = .nonTapped
+            map[location.row][location.column] = .nonOpen
             if let index = gameManager.flagLocations.firstIndex(of: location) {
                 gameManager.flagLocations.remove(at: index)
             }
