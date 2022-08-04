@@ -48,7 +48,6 @@ final class MineSweeperViewModel {
                             self.map[$0.row][$0.column] = gameManager.map[$0.row][$0.column]
                         }
                     }
-                    
                 }
                 self.map[location.row][location.column] = gameManager.map[location.row][location.column]
                 updateMap.send()
@@ -74,6 +73,15 @@ final class MineSweeperViewModel {
         default: break
         }
         updateMap.send()
+    }
+    
+    func mapAllOpen() {
+        map = gameManager.map
+        updateMap.send()
+    }
+    
+    func flagCount() -> Int {
+        return gameManager.flagLocations.count
     }
     
     func bindingGameManager() {

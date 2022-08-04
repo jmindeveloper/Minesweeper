@@ -25,7 +25,7 @@ final class MineSweeperGameManager {
     }
     
     /// 랜덤지뢰위치 생성
-    func createRandomMine(count: Int = 10, location: Location) -> Set<Location> {
+    private func createRandomMine(count: Int = 10, location: Location) -> Set<Location> {
         var mines = Set<Location>()
         while mines.count < count {
             guard let locationRow = (0..<row).randomElement(),
@@ -49,7 +49,7 @@ final class MineSweeperGameManager {
     }
     
     /// 랜덤지뢰위치 map에 적용
-    func randomMinesApplyToMap(mines: Set<Location>) {
+    private func randomMinesApplyToMap(mines: Set<Location>) {
         mines.forEach {
             map[$0.row][$0.column] = .mine
             nearMinesApplyToMap(mine: $0)

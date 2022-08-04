@@ -41,6 +41,14 @@ final class MineSweeperViewController: UIViewController {
         return button
     }()
     
+    private let mineCountLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 30)
+        label.text = "\(0)/10"
+        
+        return label
+    }()
+    
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>()
     private var gameState = GameState.start
@@ -53,6 +61,7 @@ final class MineSweeperViewController: UIViewController {
         configureSubViews()
         setConstraintsOfMineSweeperMapCollectionView()
         setConstraintsOfFlagButton()
+        setConstraintsOfMineCountLabel()
         bindingViewModel()
     }
 }
@@ -60,7 +69,8 @@ final class MineSweeperViewController: UIViewController {
 // MARK: - UI
 extension MineSweeperViewController {
     private func configureSubViews() {
-        [mineSweeperMapCollectionView, flagButton].forEach {
+        [mineSweeperMapCollectionView, flagButton,
+        mineCountLabel].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -79,6 +89,13 @@ extension MineSweeperViewController {
             $0.bottom.equalTo(mineSweeperMapCollectionView.snp.top).offset(-10)
             $0.leading.equalToSuperview().offset(30)
             $0.size.equalTo(40)
+        }
+    }
+    
+    private func setConstraintsOfMineCountLabel() {
+        mineCountLabel.snp.makeConstraints {
+            $0.centerY.equalTo(flagButton.snp.centerY)
+            $0.leading.equalTo(flagButton.snp.trailing).offset(8)
         }
     }
 }
@@ -109,6 +126,7 @@ extension MineSweeperViewController {
                     let alert = AlertManager(message: "지뢰가 터졌습니다!!\n님 뒤짐ㅋ")
                         .createAlert()
                     self?.present(alert, animated: true)
+                    self?.viewModel.mapAllOpen()
                 }
             }.store(in: &subscriptions)
     }
@@ -160,6 +178,7 @@ extension MineSweeperViewController: UICollectionViewDelegate {
         let tapLocation = Location(row: indexPath.section, column: indexPath.item)
         if flagButton.isSelected {
             viewModel.flagModeTapped(location: tapLocation)
+            mineCountLabel.text = "\(viewModel.flagCount())/10"
             return
         }
         
