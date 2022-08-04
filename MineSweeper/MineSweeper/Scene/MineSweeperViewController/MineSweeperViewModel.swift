@@ -98,6 +98,12 @@ final class MineSweeperViewModel {
         return gameManager.flagLocations.count
     }
     
+    func resetGame() {
+        map = Array(repeating: Array(repeating: MapState.nonOpen, count: gameManager.column), count: gameManager.row)
+        gameManager.resetGame()
+        updateMap.send()
+    }
+    
     func bindingGameManager() {
         gameManager.gameFinish
             .sink { [weak self] state in

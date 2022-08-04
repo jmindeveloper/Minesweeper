@@ -49,6 +49,15 @@ final class MineSweeperViewController: UIViewController {
         return label
     }()
     
+    private lazy var resetButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("reset", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 30)
+        button.addTarget(nil, action: #selector(resetButtonTapped(_:)), for: .touchUpInside)
+        
+        return button
+    }()
+    
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>()
     private var gameState = GameState.start
@@ -62,6 +71,7 @@ final class MineSweeperViewController: UIViewController {
         setConstraintsOfMineSweeperMapCollectionView()
         setConstraintsOfFlagButton()
         setConstraintsOfMineCountLabel()
+        setConstraintsOfResetButton()
         bindingViewModel()
     }
 }
@@ -70,7 +80,7 @@ final class MineSweeperViewController: UIViewController {
 extension MineSweeperViewController {
     private func configureSubViews() {
         [mineSweeperMapCollectionView, flagButton,
-        mineCountLabel].forEach {
+        mineCountLabel, resetButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -98,12 +108,28 @@ extension MineSweeperViewController {
             $0.leading.equalTo(flagButton.snp.trailing).offset(8)
         }
     }
+    
+    private func setConstraintsOfResetButton() {
+        resetButton.snp.makeConstraints {
+            $0.centerY.equalTo(flagButton.snp.centerY)
+            $0.trailing.equalToSuperview().offset(-30)
+        }
+    }
 }
 
 // MARK: - TargetMethod
 extension MineSweeperViewController {
     @objc private func flagButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
+    }
+    
+    @objc private func resetButtonTapped(_ sender: UIButton) {
+        let alert = AlertManager(message: "게임을 다시시작하겠습니까?", isCancel: true)
+            .createAlert { [weak self] in
+                self?.gameState = .start
+                self?.viewModel.resetGame()
+            }
+        self.present(alert, animated: true)
     }
 }
 
