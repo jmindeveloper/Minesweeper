@@ -14,6 +14,7 @@ final class MineSweeperGameManager {
     let column = 8
     var emptyLocations = [Location]()
     var flagLocations = [Location]()
+    private var mineLocation = [Location]()
     let gameFinish = PassthroughSubject<GameFinishState, Never>()
     lazy var map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
     private lazy var visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
@@ -25,7 +26,7 @@ final class MineSweeperGameManager {
     }
     
     /// 랜덤지뢰위치 생성
-    func createRandomMine(count: Int = 10, location: Location) -> Set<Location> {
+    private func createRandomMine(count: Int = 10, location: Location) -> Set<Location> {
         var mines = Set<Location>()
         while mines.count < count {
             guard let locationRow = (0..<row).randomElement(),
@@ -44,12 +45,13 @@ final class MineSweeperGameManager {
             }
             mines.insert(Location(row: locationRow, column: locationColumn))
         }
+        mineLocation = Array(mines)
         
         return mines
     }
     
     /// 랜덤지뢰위치 map에 적용
-    func randomMinesApplyToMap(mines: Set<Location>) {
+    private func randomMinesApplyToMap(mines: Set<Location>) {
         mines.forEach {
             map[$0.row][$0.column] = .mine
             nearMinesApplyToMap(mine: $0)
@@ -58,7 +60,7 @@ final class MineSweeperGameManager {
     
     /// 근처지뢰개수 계산
     private func nearMinesApplyToMap(mine: Location) {
-        checkMapBoundary(location: mine) { nearMine in
+        navigateAroundMap(location: mine) { nearMine in
             if map[nearMine.row][nearMine.column] != .mine {
                 map[nearMine.row][nearMine.column] = .nearMine(
                     count: map[nearMine.row][nearMine.column].nearMineCount + 1
@@ -79,7 +81,7 @@ final class MineSweeperGameManager {
         
         emptyLocations.append(location)
         
-        checkMapBoundary(location: location) { newLocation in
+        navigateAroundMap(location: location) { newLocation in
             visitedMap[location.row][location.column] = true
             findEmptyMap(location: newLocation)
         }
@@ -88,7 +90,7 @@ final class MineSweeperGameManager {
     func findEmptyMapAndValidNearMineMap(location: Location) {
         if isValidNearMineCount(location: location) {
             emptyLocations.removeAll()
-            checkMapBoundary(location: location) { newLocation in
+            navigateAroundMap(location: location) { newLocation in
                 if map[newLocation.row][newLocation.column] == .mine,
                    !flagLocations.contains(newLocation) {
                     gameFinish.send(.over)
@@ -106,7 +108,7 @@ final class MineSweeperGameManager {
     private func isValidNearMineCount(location: Location) -> Bool {
         let nearMineCount = map[location.row][location.column].nearMineCount
         var count = 0
-        checkMapBoundary(location: location) { newLocation in
+        navigateAroundMap(location: location) { newLocation in
             if flagLocations.contains(newLocation) {
                 count += 1
             }
@@ -119,7 +121,7 @@ final class MineSweeperGameManager {
         
     }
     
-    private func checkMapBoundary(location: Location, _ action: (Location) -> Void) {
+    private func navigateAroundMap(location: Location, _ action: (Location) -> Void) {
         let d = [0, 1, -1]
         for i in 0..<3 {
             for j in 0..<3 {
@@ -132,6 +134,36 @@ final class MineSweeperGameManager {
                 let newLocation = Location(row: location.row + dxy.0, column: location.column + dxy.1)
                 action(newLocation)
             }
+        }
+    }
+    
+    func checkClearCondition(nonOpenMaps: [Location]) {
+        var nonOpenMaps = nonOpenMaps
+        var count = 0
+        var locationIndex = [Int]()
+        mineLocation.forEach { mineLocation in
+            flagLocations.forEach { flagLocation in
+                if mineLocation == flagLocation {
+                    count += 1
+                }
+            }
+        }
+        
+        mineLocation.forEach { mineLocation in
+            nonOpenMaps.enumerated().forEach { index ,nonOpenLocation in
+                if mineLocation == nonOpenLocation {
+                    locationIndex.append(index)
+                    count += 1
+                }
+            }
+        }
+        
+        locationIndex.sorted(by: >).forEach {
+            nonOpenMaps.remove(at: $0)
+        }
+        
+        if count == mineLocation.count, nonOpenMaps.isEmpty {
+            gameFinish.send(.clear)
         }
     }
 }
