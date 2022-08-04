@@ -166,4 +166,12 @@ final class MineSweeperGameManager {
             gameFinish.send(.clear)
         }
     }
+    
+    func resetGame() {
+        map = Array(repeating: Array(repeating: MapState.empty, count: column), count: row)
+        visitedMap = Array(repeating: Array(repeating: false, count: column), count: row)
+        emptyLocations.removeAll()
+        mineLocation.removeAll()
+        flagLocations.removeAll()
+    }
 }
