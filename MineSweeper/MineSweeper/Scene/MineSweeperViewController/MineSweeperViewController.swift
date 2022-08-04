@@ -80,7 +80,7 @@ final class MineSweeperViewController: UIViewController {
 extension MineSweeperViewController {
     private func configureSubViews() {
         [mineSweeperMapCollectionView, flagButton,
-        mineCountLabel, resetButton].forEach {
+         mineCountLabel, resetButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
@@ -155,6 +155,7 @@ extension MineSweeperViewController {
                     self?.present(alert, animated: true)
                     self?.viewModel.mapAllOpen()
                 }
+                self?.gameState = .finish
             }.store(in: &subscriptions)
     }
 }
@@ -203,10 +204,12 @@ extension MineSweeperViewController: UICollectionViewDelegateFlowLayout {
 extension MineSweeperViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let tapLocation = Location(row: indexPath.section, column: indexPath.item)
-        if flagButton.isSelected {
-            viewModel.flagModeTapped(location: tapLocation)
-            mineCountLabel.text = "\(viewModel.flagCount())/10"
-            return
+        if gameState != .finish {
+            if flagButton.isSelected {
+                viewModel.flagModeTapped(location: tapLocation)
+                mineCountLabel.text = "\(viewModel.flagCount())/10"
+                return
+            }
         }
         
         switch gameState {
