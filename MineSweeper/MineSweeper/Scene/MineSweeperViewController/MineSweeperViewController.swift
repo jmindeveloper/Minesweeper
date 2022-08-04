@@ -72,6 +72,7 @@ final class MineSweeperViewController: UIViewController {
         setConstraintsOfFlagButton()
         setConstraintsOfMineCountLabel()
         setConstraintsOfResetButton()
+        setGestureOfMineSweeperMapCollectionView()
         bindingViewModel()
     }
 }
@@ -117,8 +118,30 @@ extension MineSweeperViewController {
     }
 }
 
+// MARK: - Method
+extension MineSweeperViewController {
+    private func setGestureOfMineSweeperMapCollectionView() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(mineSweeperMapCollectionViewLongPressAction(_:)))
+        longPressGesture.minimumPressDuration = 0.3
+        
+        mineSweeperMapCollectionView.addGestureRecognizer(longPressGesture)
+    }
+}
+
 // MARK: - TargetMethod
 extension MineSweeperViewController {
+    @objc private func mineSweeperMapCollectionViewLongPressAction(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let pressPoint = sender.location(in: mineSweeperMapCollectionView)
+            guard let indexPath = mineSweeperMapCollectionView.indexPathForItem(at: pressPoint) else { return }
+            let longPressLocation = Location(row: indexPath.section, column: indexPath.row)
+            if gameState != .finish {
+                viewModel.flagModeTapped(location: longPressLocation)
+                mineCountLabel.text = "\(viewModel.flagCount())/10"
+            }
+        }
+    }
+    
     @objc private func flagButtonTapped(_ sender: UIButton) {
         sender.isSelected.toggle()
     }
